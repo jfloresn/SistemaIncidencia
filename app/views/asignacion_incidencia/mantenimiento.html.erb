@@ -1,0 +1,97 @@
+
+
+<% if @isNew == true %>
+    <input type="hidden" id="idIncidencia" value= "">
+<% else %>
+    <input type="hidden" id="idIncidencia" value= "<%="#{@id}"%>">
+<% end %>
+<div class="row-fluid contentButtons">
+    <button name="MenuBarButton" id="btnExit" onclick="menuButtonOnClick('_MB_EXIT')" class="btn menuButtons">
+        <%= image_tag "/assets/back.png", :alt => "" %> Salir
+    </button>
+</div>
+<input type="hidden" id="edit" value= "<%="#{@edit}"%>">
+<div class="panel">
+    <div class="panel-body">
+        <div class="form-horizontal col-lg-12">
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Fecha</div>
+                    <div class="col-lg-2">
+                            <div class='input-group d date' id='datetimepicker1'>
+                                <input type='text' id="fecha" class="form-control" placeholder="Fecha" disabled="disabled"  value= "<%="#{@fecha}"%>" disabled="disabled"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                    </div> 
+                    <div class="col-lg-2 control-label">Usuario</div>
+                    <div class="col-lg-4">
+                        <input type="text" id="usuario" value= "<%="#{@usuario}"%>" class="form-control" placeholder="Usuario" disabled = "disabled">
+                        
+                    </div>
+                </div>             
+                <div class="form-group">  
+                    <div class="col-lg-2 control-label">Asunto</div>
+                    <div class="col-lg-4">
+                        <input type="text" id="asunto" value= "<%="#{@asunto}"%>" class="form-control" placeholder="Asunto" disabled="disabled" >
+                    </div>
+                    <div class="col-lg-2 control-label">Tipo Urgencia</div>
+                    <div class="col-lg-2">
+                        <select class="form-control" id="ddlUrgencia" disabled="disabled">
+                            <option value='' disabled="disabled">Seleccione</option>
+                            <% @urgencia.each do |urgencia| %>
+                                <% if (urgencia.id == @urgenciaId) %>
+                                <option value="<%="#{urgencia.id}"%>" selected><%= "#{urgencia.nombre.strip}"%></option>
+                                <% else %>
+                                <option value="<%="#{urgencia.id}"%>"><%= "#{urgencia.nombre.strip}"%></option>
+                                <% end %>
+                            <% end %>
+                        </select>
+                    </div>
+                </div>        
+                <div class="form-group">  
+                    <div class="col-lg-2 control-label">Descripcion</div>
+                    <div class="col-lg-8">
+                        <textarea cols="60" rows="5" id="descripcion" class="form-control" placeholder="Descripcion" disabled="disabled" style="resize: none;"><%="#{@descripcion}"%></textarea>
+                    </div>
+                </div>  
+            <fieldset>
+                <legend>Observaciones - Tecnico</legend>
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Observacion</div>
+                    <div class="col-lg-8">
+                        <textarea cols="60" rows="5" id="observacion" class="form-control" placeholder="Observacion" disabled="disabled" style="resize: none;" disabled="disabled"><%="#{@observacion}"%></textarea>
+                    </div>
+                </div>
+            </fieldset>               
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+                $('#datetimepicker1').datetimepicker({ format: 'DD/MM/YYYY' });
+        debugger;
+        <% if @isNew == true %>
+            $(".TitlePage").text('Asignacion de Incidencia - (Nuevo)');
+        <% else %>
+           $(".TitlePage").text('Asignacion de Incidencia - (Editar)');
+        <% end %>
+        })
+
+    function menuButtonOnClick(key){
+        debugger;
+        switch (key) {
+            case '_MB_EXIT':
+                debugger;
+                $("#ajaxLoadingPanel").show();
+                var url = "/asignacion_incidencia/bandeja"
+                $.get(url).done(function (result) {
+                    setTimeout(function () {
+                        $("#ajaxLoadingPanel").hide();
+                    }, 200);
+                    $("#workspace").html(result);
+                });
+                break;
+        }
+    }
+</script>

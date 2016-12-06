@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  usuario_id: 1
+  tecnico_id: 1
+  fecha: 2016-11-14 10:37:02
+  urgencia_id: 1
+  asunto: MyString
+  descripcion: MyString
+  observacion: MyString
+  estado_incidencia_id: 1
+  estado_apro_inci_id: 1
+
+two:
+  usuario_id: 1
+  tecnico_id: 1
+  fecha: 2016-11-14 10:37:02
+  urgencia_id: 1
+  asunto: MyString
+  descripcion: MyString
+  observacion: MyString
+  estado_incidencia_id: 1
+  estado_apro_inci_id: 1

@@ -1,0 +1,57 @@
+
+
+<div class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" id="divUsuarioEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title" id="exampleModalLabel">Listado de Usuarios</h5>
+            </div>
+            <div class="modal-body">
+                    <div id="divUsuarioEditContent" class="contentGridMedium">
+                        <table id="grdBandejaUsuario"></table>
+                        <div id="pagerBandejaUsuario"></div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn buttonsModal btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn buttonsModal btn-primary" onclick="onClickOkUsuario()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#grdBandejaUsuario").jqGrid({
+            url: '/rol/grid_data_usuario',
+            datatype: 'json',
+            colNames: ['', 'Usuario', 'Nombre', 'Apellido Paterno', 'Apellido Materno'],
+            colModel: [
+                { name: 'usuarioId', hidden: true },
+                { name: 'login', width: 80, sortable: false },
+                { name: 'nombre', width: 90, sortable: false },
+                { name: 'apePaterno', width: 90, sortable: false },
+                { name: 'apeMaterno', width: 90, sortable: false },
+            ],
+            // styleUI : 'Bootstrap',
+            rowNum: 10,
+            rowList: [5, 10, 20],
+            pager: '#pagerBandejaUsuario',
+            gridview: true,
+            rownumbers: false,
+            autoencode: true,
+            ignoreCase: true,
+            //sortname: 'created_at',
+            viewrecords: true,
+            sortorder: 'desc',
+            autowidth: true,
+            height: 300
+        });  
+        
+        $(window).resize(function () {
+            var newWidth2 = $('#contentGrid').width() - 3;
+            $('#grdBandejaUsuario').setGridWidth(newWidth2);
+        });  
+    })
+</script>

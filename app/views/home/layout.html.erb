@@ -1,0 +1,182 @@
+<input type="hidden" id="idLogin" value= "<%="#{session[:usuario_id]}"%>">
+<div class="container-fluid" style="background-color: #1C3441; height: 55px;">
+    <span class="col-lg-12" style="padding: 9px;">
+        <div class="pull-left">
+            <%= image_tag "/assets/logo.png", :alt => "", :width => "198", :height => "37" %>
+        </div>
+        <div class="pull-right">
+                <li style="display: inline-flex;">
+                    <div class="data-user"><span style="padding: 3px 5px 0 0" class="glyphicon glyphicon-check"></span> <strong>Cargo:</strong> <%="#{session[:cargo]}"%> </div>
+                    <div class="data-user"><span style="padding: 3px 5px 0 0" class="glyphicon glyphicon-user"></span> <%="#{session[:usuario_login]}"%> </div>
+              
+                    <label id="btnOption" style="color: #fff;padding: 10px 4px 0px 5px;cursor: pointer;" class="glyphicon glyphicon-cog"></label>
+                </li>
+        </div>
+    </span>
+</div>
+<div id="option" class="content-option" style="display: none; z-index: 9;background-color: #1C3441">
+    <a onclick="cambiarContrasena();" style="text-decoration: none; cursor: pointer; color:#fff; "><span class="glyphicon glyphicon-refresh"></span> Cambiar Contraseña</a><br>  
+    <a class="divider"></a><br>
+    <a onclick="cerrarsesion();" style="text-decoration: none; cursor: pointer; color:#fff; "><span class="glyphicon glyphicon-off"></span> Cerrar Sesion</a>  
+</div>
+<div class="row affix-row" style="background-color: #f8f8f8;">
+    <div class="col-sm-3 col-md-2 affix-sidebar">
+        <div class="sidebar-nav">
+            <div class="navbar navbar-default" role="navigation">
+                    <div class="sidebar-navbar-collapse">
+                    <ul class="nav navbar-nav" id="sidenav01">
+                        <% case session[:codigoRol].to_s %>
+                            <% when "_ADMIN" %>
+                            <li><a href="/incidencia/bandeja" class="menu-button"><span class="glyphicon glyphicon-tag" style="padding: 0 5px 0 0;"></span> Registro Incidencias </a></li>
+                            <li><a href="/asignacion_incidencia/bandeja" class="menu-button"><span class="glyphicon glyphicon-new-window" style="padding: 0 5px 0 0;"></span> Asignación Incidencias </a></li>
+                            <li><a href="/incidencia_asignada/bandeja" class="menu-button"><span class="glyphicon glyphicon-tag" style="padding: 0 5px 0 0;"></span> Incidencia Técnico </a></li>  
+                            <li><a href="/usuario/bandeja" class="menu-button"><span class="glyphicon glyphicon-user" style="padding: 0 5px 0 0;"></span> Usuarios </a></li>
+                            <li><a href="/rol/bandeja" class="menu-button"><span class="glyphicon glyphicon-folder-open" style="padding: 0 5px 0 0;"></span> Roles </a></li>                      
+                            <% when "_TEC" %>
+                            <li><a href="/incidencia_asignada/bandeja" class="menu-button"><span class="glyphicon glyphicon-tag" style="padding: 0 5px 0 0;"></span> Incidencia Técnico </a></li>                     
+                            <% when "_USER" %>
+                            <li><a href="/incidencia/bandeja" class="menu-button"><span class="glyphicon glyphicon-tag" style="padding: 0 5px 0 0;"</span> Registro Incidencias </a></li>
+                        <% end %>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="col-sm-9 col-md-10 affix-content" style="border-left: 1px solid #ccc; padding:0px">
+        <div class="container-fluid" style="background-color: #f5f5f5;padding: 6px 15px;border-bottom: 1px solid #e5e5e5;">
+            <span class="glyphicon glyphicon-th" style="color: #1C3441; font-size: 16px; top: 2px; padding:0 4px;"></span>
+            <label class="TitleHeaderPage" style="font-weight: normal; font-size: 15px; color: #1C3441; margin-top:5px;">  Inicio</label>
+        </div>
+        <div class="container-fluid">
+            <h1 style="font-size:21px;">
+            <div class="TitlePage" style="/*! background-color: #ccc; *//*! height: 24px; */padding: 1px 0px 1px 20px;border-bottom: 1px dotted #d2d2d2;color: #1C3441;">
+            </div>
+             </h1>
+        </div>
+        <div class="message messageSuccess"></div>
+        <div class="message messageInformation"></div>
+        <div class="message messageError"></div>
+        <div id="workspace" class="container-fluid" style="position: relative; margin-top:5px;">
+
+        </div>
+        <div id="ajaxLoadingPanel">
+            <div class="ajaxLoadingPanelContent">
+                <%= image_tag "/assets/ajax-loader.gif", :alt => "" %>
+                <br />Procesando...
+            </div>
+        </div>
+    </div>
+</div>        
+
+<!--PopUp cambiar contrasena-->
+
+<div class="modal" id='divCambiarContrasena' rol="dialog">
+    <div class="modal-dialog  modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title">Cambiar contraseña</h5>
+            </div>
+            <div class="modal-body">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="form-horizontal col-lg-12">                            
+                            <div class="form-group">
+                                <div class="col-lg-4 control-label">Usuario</div>
+                                <div class="col-lg-8">
+                                    <input type="text" id="usuario" value= "<%="#{session[:usuario_login]}"%>" class="form-control" placeholder="Usuario" disabled="disabled" >                                    
+                                </div>
+                            </div>
+                                                     
+                            <div class="form-group">
+                                <div class="col-lg-4 control-label">Contraseña</div>
+                                <div class="col-lg-8">
+                                    <input type="password" id="changeContrasena" value="" class="form-control" placeholder="Contraseña" maxlength="10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn buttonsModal btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn buttonsModal btn-primary" onclick="cambiarContrasenaOk()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    debugger;
+    $(document).ready(function () {
+        $("#btnOption").click(function () {
+            debugger;
+          $("#option").each(function() {
+            displaying = $(this).css("display");
+            if(displaying == "block") {
+              $(this).fadeOut('slow',function() {
+               $(this).css("display","none");
+              });
+            } else {
+              $(this).fadeIn('slow',function() {
+                $(this).css("display","block");
+              });
+            }
+          });
+        });
+        $(function () {
+            $(".menu-button").on("click", function (e) {
+                debugger;
+                e.preventDefault();
+                $("#ajaxLoadingPanel").show();
+                var url = $(this).attr("href");
+                $.get(url).done(function (result) {
+                    setTimeout(function () {
+                        $("#ajaxLoadingPanel").hide();
+                    }, 200);
+                    $("#workspace").html(result);
+                });
+            });
+        });
+    });
+
+    function cerrarsesion() {
+        debugger;
+        $.ajax({
+            type: "GET",
+            url: "/login/sessionOut",
+            success: function (data, status, xhr) {
+                location.href = data.url;
+            }
+        })
+    }
+    function cambiarContrasena(){
+        $("#divCambiarContrasena").modal('show');
+        $("#option").hide();
+    }
+    function cambiarContrasenaOk(){
+        if ($("#changeContrasena").val() == '') {
+            $("#changeContrasena").focus()
+            message(2,'Ingrese una contraseña')
+            return;
+        }
+        debugger;
+        var jsonData = {
+            usuarioId: $("#idLogin").val(),
+            contrasena: $("#changeContrasena").val()
+        }
+        controllerSaveAction("/home/actualizarContrasena", jsonData, true, true, function (response) {
+            debugger;
+            if (response.success) {
+                message(1, response.message);
+                $("#divCambiarContrasena").modal('hide');
+            }
+            else {
+                message(2, response.message);
+            }
+        });
+    }
+</script>

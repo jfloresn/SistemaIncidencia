@@ -1,0 +1,19 @@
+
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="form-horizontal col-lg-12">          
+                                <div class="form-group">  
+                                    <div class="col-lg-2 control-label">Tecnico</div>
+                                    <div class="col-lg-10">
+                                        <select class="form-control" id="ddlTecnicoId">
+                                            <option value=''>Seleccione</option>
+                                            <% @tecnico.each do |tecnico| %>
+                                                <option value="<%="#{tecnico.usuarioId}"%>"><%= "#{tecnico.nombreUser.strip}"%></option>
+                                            <% end %>
+                                        </select>
+                                    </div>
+                                </div>                   
+                        </div>
+                    </div>
+                </div>
+            </div>

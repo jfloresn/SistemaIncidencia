@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+.text-center{
+    text-align:center;
+}
+.text-right{
+    text-align:right;
+}
+.text-left{
+    text-align:left;
+}
+.font-weight{
+    font-weight:bold;
+}
+.font-size-small{
+    font-size:12px;
+}
+body{
+    font-family:font-size: "Open Sans", "Helvetica Neue",Tahoma, Helvetica, Arial, sans-serif;
+    font-size:17px;
+}
+.logo{
+    background-image: asset-url("assets/logo.png")
+}
+table {
+    display: table;
+    border-collapse: 0px;
+    border-spacing: 0px;
+    border-color: #ccc;
+}
+</style>
+</head>
+    <body>
+        <table  style="width:100%" border=0>
+            <tr>
+                <td rowspan="4" style="width:130px"><%= wicked_pdf_image_tag 'logo2.png', :width=>"165", :height=>"55" %></td>
+                <td colspan="3" rowspan="4" class="text-center font-weight"><h2> Registro de Incidencia</h2></td>
+                <td style="width:150px" class="text-center font-weight">Nro.Documento</td>
+            </tr>
+            <tr>
+                <td style="width:150px; border:1px solid #ccc" class="text-center"><%="#{@codigo}"%></td>
+            </tr>
+            <tr>
+                <td style="width:150px" class="text-center font-weight">Fecha</td>
+            </tr>
+            <tr>
+                <td style="width:150px; border:1px solid #ccc" class="text-center"><%="#{@fecha}"%></td>
+            </tr>            
+        </table>
+        </br>
+        <table  style="width:100%" border=0>
+            <tr>
+                <td style="width:25%; border:1px solid #ccc" class="text-right font-weight">Nombres y Apellidos:</td>
+                <td style="width:75%; border:1px solid #ccc" class="text-left"><%="#{@usuario}"%></td>
+            </tr>
+            <tr>
+                <td style="width:25%; border:1px solid #ccc" class="text-right font-weight">Cargo:</td>
+                <td style="width:75%; border:1px solid #ccc" class="text-left"><%="#{@nombreCargo}"%></td>
+            </tr>
+            <tr>
+                <td style="width:25%; border:1px solid #ccc" class="text-right font-weight">Urgencia:</td>
+                <td style="width:75%; border:1px solid #ccc" class="text-left"><%="#{@urgenciaNombre}"%></td>
+            </tr>            
+        </table>
+        </br>
+        <table  style="width:100%" border=0>
+            <tr>     
+                <td colspan="4" class="text-left font-weight">Detalle de Incidencia</td>
+            </tr> 
+            <tr>
+                <td style="width:75%; border:1px solid #ccc" class="text-left"><%="#{@descripcion}"%></td>
+            </tr>     
+        </table>
+        </br>
+        <% if ("#{@observacion}" != "") %>
+            <table  style="width:100%" border=0>
+                <tr>     
+                    <td colspan="4" class="text-left font-weight">Respuesta Tecnica</td>
+                </tr>  
+                <tr>
+                    <td style="width:75%; border:1px solid #ccc" class="text-left"><%="#{@observacion}"%></td>
+                </tr>      
+            </table>
+        <% end %>
+        </br>
+        <table  style="width:100%" border=0>
+            <tr>     
+                <td colspan="4" class="text-left font-weight">Historial de Cambios</td>
+            </tr>  
+                <tr>
+                    <td style="width:10%; border:1px solid #ccc" class="text-center font-weight font-size-small">Fecha</td>  
+                    <td style="width:20%; border:1px solid #ccc" class="text-center font-weight font-size-small">Estado Incidencia</td>
+                    <td style="width:20%; border:1px solid #ccc" class="text-center font-weight font-size-small">Estado Aprobación</td>  
+                    <td style="width:50%; border:1px solid #ccc" class="text-center font-weight font-size-small">Observación</td>   
+                </tr> 
+                <% @allHistoriaIncidencia.each do |allHistoriaIncidencia| %>
+                <tr>
+                    <td style="width:10%; border:1px solid #ccc" class="text-center font-size-small"><%="#{allHistoriaIncidencia.fecha.strftime('%d-%m-%Y %H:%M:%S')}"%></td>  
+                    <td style="width:20%; border:1px solid #ccc" class="text-center font-size-small"><%="#{allHistoriaIncidencia.estadoIncidencia}"%></td>
+                    <td style="width:20%; border:1px solid #ccc" class="text-center font-size-small"><%="#{allHistoriaIncidencia.estadoAprobIncidencia}"%></td>  
+                    <td style="width:50%; border:1px solid #ccc" class="text-left font-size-small"><%="#{allHistoriaIncidencia.observacion}"%></td>  
+                </tr>                    
+                <% end %>  
+        </table>
+    </body>
+</html>

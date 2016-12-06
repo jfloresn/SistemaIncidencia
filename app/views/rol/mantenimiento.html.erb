@@ -1,0 +1,246 @@
+<div class="row-fluid contentButtons">
+    <button name="MenuBarButton" id="btnSave" onclick="menuButtonOnClick('_MB_SAVE')" class="btn menuButtons">
+        <%= image_tag "/assets/save.png", :alt => "" %> Guardar
+    </button>
+    <button name="MenuBarButton" id="btnExit" onclick="menuButtonOnClick('_MB_EXIT')" class="btn menuButtons">
+        <%= image_tag "/assets/back.png", :alt => "" %> Salir
+    </button>
+</div>
+
+<input type="hidden" id="idRol" value="<%=" #{@rol.id}"%>">
+<input type="hidden" id="edit" value="<%=" #{@edit}"%>">
+<div class="panel">
+    <div class="panel-body">
+        <div class="form-horizontal col-lg-12">
+            <div class="form-group">
+                <div class="col-lg-2 control-label">Nombre del Rol</div>
+                <div class="col-lg-6">
+                    <input type="text" id="nombre" value="<%=" #{@rol.nombre.strip}"%>" class="form-control" placeholder="Nombre del rol" >
+                </div>
+                <div class="col-lg-2 control-label">Activo</div>
+                <div class="col-lg-2 checkbox">
+                    <input type="checkbox" id="estado" checked>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="divTitleGrid">Roles por Usuario</div>
+<div class="row-fluid contentGridButtons">
+    <button name="MenuBarButton" id="btnNewRolUsuario" onclick="menuButtonRolUsuarioOnClick('_MB_NEW')" class="btn menuGridButtons">
+        <span class="glyphicon glyphicon-plus"></span> Nuevo
+    </button>
+
+    <button name="MenuBarButton" id="btnEditRolUsuario" onclick="menuButtonRolUsuarioOnClick('_MB_EDIT')" class="btn menuGridButtons disabled">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+    </button>
+
+    <button name="MenuBarButton" id="btnDeleteRolUsuario" onclick="menuButtonRolUsuarioOnClick('_MB_DELETE')" class="btn menuGridButtons disabled">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+    </button>
+</div>
+<div id="contentGridRolUsuario">
+    <table id="grdRolUsuario"></table>
+    <div id="pagerRolUsuario"></div>
+</div>
+
+<!-- Div Usuario Edit -->
+ <%= render(:partial => "usuarioEdit") %>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        resizeWorkspace();
+        debugger;
+        <% if @isNew == true %>
+            $(".TitlePage").text('Registro de Roles - (Nuevo)');
+        <% else %>
+           $(".TitlePage").text('Registro de Roles - (Editar)');
+        $("#btnNewRolUsuario").removeClass("disabled");
+        <% end %>
+
+        $("#grdRolUsuario").jqGrid({
+            url: '/rol/grid_data_rol_usuario',
+             postData: {
+                rolId: $("#idRol").val()
+            },
+            datatype: 'json',
+            colNames: ['','Usuario'],
+            colModel: [
+                { name: 'rolUsuarioId', hidden:true },
+                { name: 'nombreUsuario', sortable: false }
+            ],
+            onSelectRow: function (rowid) {
+                if (rowid == null || rowid == 0)
+                    return;
+
+                $("#btnEditRolUsuario").removeClass("disabled");
+                $("#btnDeleteRolUsuario").removeClass("disabled");
+
+                $('#grdBandejaUsuario').setGridParam({ datatype: 'json' });
+                $('#grdBandejaUsuario').trigger('reloadGrid');
+            },
+            // styleUI : 'Bootstrap',
+            rowNum: 10,
+            rowList: [5, 10, 20],
+            pager: '#pagerRolUsuario',
+            gridview: true,
+            rownumbers: false,
+            autoencode: true,
+            ignoreCase: true,
+            //sortname: 'created_at',
+            viewrecords: true,
+            sortorder: 'desc',
+            autowidth: true,
+            height: 270
+        });
+
+         $(window).resize(function () {
+            var newWidth = $('#contentGridRolUsuario').width() - 2;
+            $('#grdRolUsuario').setGridWidth(newWidth);
+            var newWidth2 = $('#divUsuarioEditContent').width() - 3;
+            $('#grdBandejaUsuario').setGridWidth(newWidth2);
+        });
+    })
+
+    function menuButtonOnClick(key){
+        debugger;
+        switch (key) {
+            case '_MB_SAVE':
+                saveData();
+                break;
+            case '_MB_EXIT':
+                debugger;
+                $("#ajaxLoadingPanel").show();
+                var url = "/rol/bandeja"
+                $.get(url).done(function (result) {
+                    setTimeout(function () {
+                        $("#ajaxLoadingPanel").hide();
+                    }, 200);
+                    $("#workspace").html(result);
+                });
+                break;
+        }
+    }
+
+    function saveData(){
+        if ($("#nombre").val() == '') {
+            $("#nombre").focus()
+            message(2,'Ingrese el nombred el rol')
+            return;
+        }
+
+        if( $('#estado').prop('checked') )
+            var estado = 'A'
+        else
+            var estado = 'I'
+
+        var jsonData = {
+            rolId: $("#idRol").val(),
+            nombre: $("#nombre").val(),
+            estado: estado,
+            edit: $("#edit").val()
+        }
+        controllerSaveAction("/rol/grabarDatos", jsonData, true, true, function (response) {
+            debugger;
+            if (response.success) {
+                message(1, response.message);
+            }
+            else {
+                message(2, response.message);
+            }
+        });
+    }
+    function menuButtonRolUsuarioOnClick(key){
+        debugger;
+        switch (key) {
+            case '_MB_NEW':
+                debugger;   
+                $("#edit").val(1);          
+                $('#divUsuarioEdit').modal('show');
+                resizeWorkspace();
+                break;
+            case '_MB_EDIT':
+                debugger;       
+                $("#edit").val(2);        
+                $('#divUsuarioEdit').modal('show');
+                resizeWorkspace();
+                break;
+            case '_MB_DELETE':
+                rowId = $("#grdRolUsuario").jqGrid ('getGridParam', 'selrow')
+                if (rowId != null) {
+                    row = $("#grdRolUsuario").jqGrid('getRowData',rowId);
+                }
+                else {
+                    message(2,'Seleccione un registro')
+                    return;
+                }
+
+                bootbox.confirm({ title: "( Eliminar Usuario )", message:
+                  '¿Esta seguro de eliminar el usuario seleccionado?', callback :function(result) {
+                      if (result==false){
+                          return;
+                      }
+                    var postData = {
+                        rolUsuarioId : row.rolUsuarioId
+                    }
+                    controllerSaveAction('/rol/eliminarRolUsuario', postData, true, true, function (response){
+                        debugger;
+                       if (response.success) {
+                           debugger;
+                          $('#grdRolUsuario').setGridParam({ datatype: 'json' });
+                          $('#grdRolUsuario').trigger('reloadGrid');
+
+                          message(1, response.message);
+
+                       } else {
+                          message(2, response.message);
+                       }
+                    });
+                  }})
+                  break;
+        }
+    }
+
+
+    function onClickOkUsuario(){
+        debugger;
+        rowId = $("#grdBandejaUsuario").jqGrid ('getGridParam', 'selrow')
+        if (rowId != null) {
+            row = $("#grdBandejaUsuario").jqGrid('getRowData',rowId);
+        }
+        else {
+            message(2,'Seleccione un registro')
+            return;
+        }
+        
+        rowId2 = $("#grdRolUsuario").jqGrid ('getGridParam', 'selrow')
+        row2 = $("#grdRolUsuario").jqGrid('getRowData',rowId2);
+        debugger;
+        var jsonData = {
+            rolUsuarioId: row2.rolUsuarioId,
+            usuarioId: row.usuarioId,
+            rolId: $("#idRol").val(),
+            edit: $("#edit").val()
+        }
+        controllerSaveAction("/rol/grabarDatosRolUsuario", jsonData, true, true, function (response) {
+            debugger;
+            if (response.success) {
+                debugger;
+                $('#grdRolUsuario').setGridParam({ datatype: 'json' });
+                $('#grdRolUsuario').trigger('reloadGrid');
+                message(1, response.message);
+                 $('#divUsuarioEdit').modal('hide')
+            }
+            else {
+                message(2, response.message);
+            }
+        });
+    }
+    function resizeWorkspace(){
+        debugger;
+        var newWidth2 = $('#contentGridRolUsuario').width() - 3;
+        $('#grdRolUsuario').setGridWidth(newWidth2);
+        var newWidth = $('#divUsuarioEditContent').width() - 3;
+        $('#grdBandejaUsuario').setGridWidth(newWidth);
+    }
+</script>

@@ -1,0 +1,149 @@
+
+
+<% if @isNew == true %>
+    <input type="hidden" id="idIncidencia" value= "">
+<% else %>
+    <input type="hidden" id="idIncidencia" value= "<%="#{@id}"%>">
+<% end %>
+<div class="row-fluid contentButtons">
+    <button name="MenuBarButton" id="btnAprobar" onclick="menuButtonOnClick('_MB_APROB')" class="btn menuButtons">
+        <%= image_tag "/assets/approve.png", :alt => "" %> Corregida
+    </button>
+    <button name="MenuBarButton" id="btnRechazar" onclick="menuButtonOnClick('_MB_DESAPROB')" class="btn menuButtons">
+        <%= image_tag "/assets/refuse.png", :alt => "" %> Rechazar
+    </button>
+    <button name="MenuBarButton" id="btnExit" onclick="menuButtonOnClick('_MB_EXIT')" class="btn menuButtons">
+        <%= image_tag "/assets/back.png", :alt => "" %> Salir
+    </button>
+</div>
+<input type="hidden" id="edit" value= "<%="#{@edit}"%>">
+<div class="panel">
+    <div class="panel-body">
+        <div class="form-horizontal col-lg-12">
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Fecha</div>
+                    <div class="col-lg-2">
+                            <div class='input-group d date' id='datetimepicker1'>
+                                <input type='text' id="fecha" class="form-control" placeholder="Fecha" disabled="disabled"  value= "<%="#{@fecha}"%>" disabled="disabled"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                    </div> 
+                    <div class="col-lg-2 control-label">Usuario</div>
+                    <div class="col-lg-4">
+                        <input type="text" id="usuario" value= "<%="#{@usuario}"%>" class="form-control" placeholder="Usuario" disabled = "disabled">
+                        
+                    </div>
+                </div>             
+                <div class="form-group">  
+                    <div class="col-lg-2 control-label">Asunto</div>
+                    <div class="col-lg-4">
+                        <input type="text" id="asunto" value= "<%="#{@asunto}"%>" class="form-control" placeholder="Asunto" disabled="disabled" >
+                    </div>
+                    <div class="col-lg-2 control-label">Tipo Urgencia</div>
+                    <div class="col-lg-2">
+                        <select class="form-control" id="ddlUrgencia" disabled="disabled">
+                            <option value='' disabled="disabled">Seleccione</option>
+                            <% @urgencia.each do |urgencia| %>
+                                <% if (urgencia.id == @urgenciaId) %>
+                                <option value="<%="#{urgencia.id}"%>" selected><%= "#{urgencia.nombre.strip}"%></option>
+                                <% else %>
+                                <option value="<%="#{urgencia.id}"%>"><%= "#{urgencia.nombre.strip}"%></option>
+                                <% end %>
+                            <% end %>
+                        </select>
+                    </div>
+                </div>        
+                <div class="form-group">  
+                    <div class="col-lg-2 control-label">Descripcion</div>
+                    <div class="col-lg-8">
+                        <textarea cols="60" rows="5" id="descripcion" class="form-control" placeholder="Descripcion" disabled="disabled" style="resize: none;"><%="#{@descripcion}"%></textarea>
+                    </div>
+                </div>   
+                
+            <fieldset>
+                <legend>Observaciones - Tecnico</legend>
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Observacion</div>
+                    <div class="col-lg-8">
+                        <textarea cols="60" rows="5" id="observacion" class="form-control" placeholder="Observacion" maxlength="300" style="resize: none;"><%="#{@observacion}"%></textarea>
+                    </div>
+                </div>
+            </fieldset>            
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+                $('#datetimepicker1').datetimepicker({ format: 'DD/MM/YYYY' });
+        debugger;
+        <% if @isNew == true %>
+            $(".TitlePage").text('Incidencias Asignadas - (Nuevo)');
+        <% else %>
+           $(".TitlePage").text('Incidencias Asignadas - (Editar)');
+        <% end %>
+        })
+
+    function menuButtonOnClick(key){
+        debugger;
+        switch (key) {
+            case '_MB_APROB':
+            case '_MB_DESAPROB':
+        var jsonData = {
+                    incidenciaId: $("#idIncidencia").val(),
+                    observacion: $("#observacion").val(),
+                    edit: $("#edit").val()
+                    
+                }
+            switch (key) {
+                case '_MB_APROB':
+                    controllerSaveAction("/incidencia_asignada/grabarDatosAprob", jsonData, true, true, function (response) {
+                        debugger;
+                        if (response.success) {
+                            // location.href = response.url;
+                            // controllerGetAction(response.url, null, 'workspace', true, true, null);
+                            message(1, response.message);
+                            controllerGetAction(response.url, null, 'workspace', true, true, null);
+                        }
+                        else {
+                            message(2, response.message);
+                        }
+                    });
+                break;
+                case '_MB_DESAPROB':
+                
+                    if ($("#observacion").val() == '') {
+                        $("#observacion").focus()
+                        message(2,'Ingrese una observacion')
+                        return;
+                    }
+                    controllerSaveAction("/incidencia_asignada/grabarDatosDesAprob", jsonData, true, true, function (response) {
+                        debugger;
+                        if (response.success) {
+                            // location.href = response.url;
+                            message(1, response.message);
+                            controllerGetAction(response.url, null, 'workspace', true, true, null);
+                        }
+                        else {
+                            message(2, response.message);
+                        }
+                    });
+                break;
+            }
+        
+            break;
+            case '_MB_EXIT':
+                debugger;
+                $("#ajaxLoadingPanel").show();
+                var url = "/incidencia_asignada/bandeja"
+                $.get(url).done(function (result) {
+                    setTimeout(function () {
+                        $("#ajaxLoadingPanel").hide();
+                    }, 200);
+                    $("#workspace").html(result);
+                });
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,218 @@
+
+
+<% if @isNew == true %>
+    <input type="hidden" id="idIncidencia" value= "">
+<% else %>
+    <input type="hidden" id="idIncidencia" value= "<%="#{@id}"%>">
+<% end %>
+<div class="row-fluid contentButtons">
+    <button name="MenuBarButton" id="btnSave" onclick="menuButtonOnClick('_MB_SAVE')" class="btn menuButtons">
+        <%= image_tag "/assets/save.png", :alt => "" %> Guardar
+    </button>
+    <% if @isNew == true %>
+    <button name="MenuBarButton" id="btnSend" onclick="menuButtonOnClick('_MB_SEND')" class="btn menuButtons disabled">
+        <%= image_tag "/assets/send.png", :alt => "" %> Enviar Solicitud
+    </button>
+    <% else %>
+    <button name="MenuBarButton" id="btnSend" onclick="menuButtonOnClick('_MB_SEND')" class="btn menuButtons">
+        <%= image_tag "/assets/send.png", :alt => "" %> Enviar Solicitud
+    </button>
+    <% end %>
+    <button name="MenuBarButton" id="btnExit" onclick="menuButtonOnClick('_MB_EXIT')" class="btn menuButtons">
+        <%= image_tag "/assets/back.png", :alt => "" %> Salir
+    </button>
+</div>
+<input type="hidden" id="edit" value= "<%="#{@edit}"%>">
+<div class="panel">
+    <div class="panel-body">
+        <div class="form-horizontal col-lg-12">
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Fecha</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                            <div class='input-group d date' id='datetimepicker1'>
+                                <input type='text' id="fecha" class="form-control" placeholder="Fecha"  value= ""/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>  
+                                </span>
+                            </div>
+                        <% else %>
+                            <div class='input-group d date' id='datetimepicker1'>
+                                <input type='text' id="fecha" class="form-control" placeholder="Fecha"  value= "<%="#{@fecha}"%>" disabled="disabled"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        <% end %>
+                    </div> 
+                    <div class="col-lg-2 control-label">Usuario</div>
+                    <div class="col-lg-4">
+                        <input type="text" id="usuario" value= "<%="#{@usuario}"%>" class="form-control" placeholder="Usuario" disabled = "disabled">
+                        
+                    </div>
+                </div>             
+                <div class="form-group">  
+                    <div class="col-lg-2 control-label">Asunto</div>
+                    <div class="col-lg-4">
+                        <% if @isNew == true %>
+                        <input type="text" id="asunto" value="" class="form-control" placeholder="Asunto">
+                        <% else %>
+                        <input type="text" id="asunto" value= "<%="#{@asunto}"%>" class="form-control" placeholder="Asunto" >
+                        <% end %>
+                    </div>
+                    <div class="col-lg-2 control-label">Tipo Urgencia</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                        <select class="form-control" id="ddlUrgencia">
+                            <option value="">Seleccione</option>
+                            <% @urgencia.each do |urgencia| %>
+                            <option value="<%= urgencia.id %>"><%= urgencia.nombre.strip %></option>
+                            <% end %>
+                        </select>
+                        <% else %>
+                        <select class="form-control" id="ddlUrgencia">
+                            <option value=''>Seleccione</option>
+                            <% @urgencia.each do |urgencia| %>
+                            <% if (urgencia.id == @urgenciaId) %>
+                            <option value="<%="#{urgencia.id}"%>" selected><%= "#{urgencia.nombre.strip}"%></option>
+                            <% else %>
+                            <option value="<%="#{urgencia.id}"%>"><%= "#{urgencia.nombre.strip}"%></option>
+                            <% end %>
+                            <% end %>
+                        </select>
+                        <% end %>
+                    </div>
+                </div>        
+                <div class="form-group">  
+                    <div class="col-lg-2 control-label">Descripcion</div>
+                    <div class="col-lg-8">
+                        <% if @isNew == true %>
+                        <textarea cols="60" rows="5" id="descripcion" class="form-control" placeholder="Descripcion" maxlength="300" style="resize: none;"></textarea>
+                        <% else %>
+                        <textarea cols="60" rows="5" id="descripcion" class="form-control" placeholder="Descripcion" maxlength="300" style="resize: none;"><%="#{@descripcion}"%></textarea>
+                        <% end %>
+                    </div>
+                </div> 
+            <fieldset>
+                <legend>Observaciones - Tecnico</legend>
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Observacion</div>
+                    <div class="col-lg-8">
+                        <% if @isNew == true %>
+                        <textarea cols="60" rows="5" id="observacion" class="form-control" placeholder="Observacion" maxlength="300" disabled="disabled" style="resize: none;" disabled="disabled"></textarea>
+                        <% else %>
+                        <textarea cols="60" rows="5" id="observacion" class="form-control" placeholder="Observacion" maxlength="300" disabled="disabled" style="resize: none;" disabled="disabled"><%="#{@observacion}"%></textarea>
+                        <% end %>
+                    </div>
+                </div>
+            </fieldset>                
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+                $('#datetimepicker1').datetimepicker({ format: 'DD/MM/YYYY' });
+        debugger;
+        <% if @isNew == true %>
+            $(".TitlePage").text('Registro de Incidencia - (Nuevo)');
+        <% else %>
+           $(".TitlePage").text('Registro de Incidencia - (Editar)');
+        <% end %>
+        })
+
+    function menuButtonOnClick(key){
+        debugger;
+        switch (key) {
+            case '_MB_SAVE':
+                debugger;
+                saveData(key);
+                break;
+            case '_MB_SEND':
+                debugger;
+                saveData(key);
+                break;
+            case '_MB_EXIT':
+                debugger;
+                $("#ajaxLoadingPanel").show();
+                var url = "/incidencia/bandeja"
+                $.get(url).done(function (result) {
+                    setTimeout(function () {
+                        $("#ajaxLoadingPanel").hide();
+                    }, 200);
+                    $("#workspace").html(result);
+                });
+                break;
+        }
+    }
+    function saveData(key){
+        if ($("#fecha").val() == '') {
+            $("#fecha").focus()
+            message(2,'Seleccione la fecha')
+            return;
+        }
+        if ($("#asunto").val() == '') {
+            $("#asunto").focus()
+            message(2,'Ingrese el asunto')
+            return;
+        }
+        if ($("#ddlUrgencia").val() == '') {
+            $("#ddlUrgencia").focus()
+            message(2,'Seleccione el tipo de urgencia')
+            return;
+        }
+        if ($("#descripcion").val() == '') {
+            $("#descripcion").focus()
+            message(2,'Ingrese una descripcion')
+            return;
+        }
+        var jsonData = {
+            incidenciaId: $("#idIncidencia").val(),
+            usuarioId: $("#idLogin").val(),
+            urgenciaId : $("#ddlUrgencia").val(),
+            fecha: $("#fecha").val(),
+            asunto: $("#asunto").val(),
+            descripcion: $("#descripcion").val(),
+            edit: $("#edit").val()
+        }
+        switch (key) {
+            case '_MB_SAVE':
+                    controllerSaveAction("/incidencia/grabarDatos", jsonData, true, true, function (response) {
+                        debugger;
+                        if (response.success) {
+                            // location.href = response.url;
+                            // controllerGetAction(response.url, null, 'workspace', true, true, null);
+                            message(1, response.message);
+                            $("#idIncidencia").val(response.data);
+                            $('#btnSend').removeClass("disabled");
+                        }
+                        else {
+                            message(2, response.message);
+                            $('#btnSend').addClass("disabled");
+                        }
+                    });
+                break;
+            case '_MB_SEND':
+                    controllerSaveAction("/incidencia/grabarDatosSolicitud", jsonData, true, true, function (response) {
+                        debugger;
+                        if (response.success) {
+                            // location.href = response.url;
+                            controllerGetAction(response.url, null, 'workspace', true, true, null);
+                            message(1, response.message);
+                        }
+                        else {
+                            message(2, response.message);
+                        }
+                    });
+                break;
+        }
+
+        // 	$("#ajaxLoadingPanel").show();
+        //         	$.ajax({
+        //     type: "POST",
+        //     url: "/usuario/grabarDatos",
+        //     success: function(data,status,xhr){
+        //                   setTimeout(function () { $("#ajaxLoadingPanel").hide(); }, 1000);
+        // 	}
+        // })
+    }
+</script>

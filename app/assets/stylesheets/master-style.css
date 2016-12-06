@@ -1,0 +1,309 @@
+    body {
+        font-size: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background-color: #1C3441;
+    }
+    
+    .data-user {
+        padding: 8px;
+        color: #fff;
+        font-size: 12px;
+    }
+    
+    .page-header {
+        /*padding: 11px 10px 6px 10px;*/
+        margin: 0px;
+        /* border-bottom: 1px solid #eee; */
+        /*background-color: rgb(60, 123, 152);*/
+        /*width: AUTO;
+        position: absolute;*/
+        /*border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;*/
+        /* margin-left: -14px;*/
+        /*z-index: -1 !important;
+        display: inline-block;*/
+        background: #f5f5f5;
+        padding: 10px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    
+    .contentButtons {
+        border: 1px solid #f7f7f7;
+        background-color: #fdfdfd;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+    
+    .menuButtons {
+        padding: 3px 4px 3px 4px;
+        width: auto;
+        border-radius: 2px;
+        font-size: 12px;
+        color: rgb(9, 77, 125);
+        border: 1px solid rgb(9, 77, 125);
+        ;
+        background-color: #fff;
+        outline: none;
+    }
+    
+    .menuButtons:hover {
+        border: 1px solid rgb(0, 191, 233);
+    }
+    
+    .menuGridButtons {
+        font-size: 11px;
+        color: rgb(9, 77, 125);
+        border: 0px;
+        padding: 3px;
+        background-color: transparent;
+    }
+    
+    .menuGridButtons:hover {
+        color: rgb(24, 120, 187);
+    }
+    
+    .contentGridButtons {
+        background-color: #fdfdfd;
+        border: 1px solid #ccc;
+        margin-top: 4px;
+        padding: 0 5px;
+    }
+    
+    .form-control {
+        height: 26px;
+        padding: 5px 12px;
+        font-size: 12px;
+        border-radius: 0;
+    }
+    /* Carousel */
+    
+    #quote-carousel {
+        padding: 0 10px 30px 10px;
+        margin-top: 0px;
+        /* Control buttons  */
+        /* Previous button  */
+        /* Next button  */
+        /* Changes the position of the indicators */
+        /* Changes the color of the indicators */
+    }
+    
+    #quote-carousel .carousel-control {
+        background: none;
+        color: #CACACA;
+        font-size: 2.3em;
+        text-shadow: none;
+        margin-top: 0px;
+    }
+    
+    #quote-carousel .carousel-control.left {
+        left: -60px;
+    }
+    
+    #quote-carousel .carousel-control.right {
+        right: -60px;
+    }
+    
+    #quote-carousel .carousel-indicators {
+        right: 50%;
+        top: auto;
+        bottom: 0px;
+        margin-right: -19px;
+    }
+    
+    #quote-carousel .carousel-indicators li {
+        width: 10px;
+        height: 10px;
+        margin: 5px;
+        cursor: pointer;
+        border: 4px solid #CCC;
+        border-radius: 50px;
+        opacity: 0.4;
+        overflow: hidden;
+        /*transition: all 0.4s;*/
+    }
+    
+    #quote-carousel .carousel-indicators .active {
+        background: #333333;
+        width: 10px;
+        height: 10px;
+        border-color: #f33;
+        opacity: 1;
+        overflow: hidden;
+    }
+    
+    .carousel-inner {
+        min-height: 200px;
+    }
+    
+    .item blockquote {
+        border-left: none;
+        margin: 0;
+        width: 100%;
+    }
+    
+    .item blockquote p:before {
+        content: "\f10d";
+        font-family: 'Fontawesome';
+        float: left;
+        margin-right: 10px;
+        width: 100%;
+    }
+    
+    .img-responsive {
+        width: 100%;
+    }
+    
+    #ajaxLoadingPanel,
+    .popup-locked {
+        display: none;
+        position: absolute;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, 0.75);
+        text-align: center;
+    }
+    
+    .ajaxLoadingPanelContent,
+    .popup-locked-content {
+        top: 40%;
+        position: relative;
+        font-weight: bold;
+        color: #1C90CE;
+    }
+    
+    .panel {
+        border: 1px solid #efefef;
+    }
+    
+    .message {
+        width: auto;
+        min-width: 300px;
+        height: 48px;
+        font-weight: bold;
+        background-color: #ccc;
+        margin-top: -45px;
+        border-radius: 3px;
+        /*text-align: center;*/
+        padding: 14px 8px 12px 8px;
+        font-size: 14px;
+        display: none;
+        position: absolute;
+        right: 4px;
+        z-index: 9999999 !important;
+    }
+    
+    .messageSuccess {
+        color: #4F8A10;
+        background-color: #DFF2BF;
+        background-color: rgba(223, 242, 191, 0.59);
+        border: 1px solid #4F8A10;
+    }
+    
+    .messageInformation {
+        color: #9F6000;
+        background-color: #FEEFB3;
+        background-color: rgba(254, 239, 179, 0.59);
+        border: 1px solid #9F6000;
+    }
+    
+    .messageError {
+        color: #D8000C;
+        background-color: #FFBABA;
+        background-color: rgba(255, 186, 186, 0.59);
+        border: 1px solid #D8000C;
+    }
+    
+    .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.30);
+        z-index: 0
+    }
+    
+    .modal-header {
+        padding: 6px 15px;
+        background-color: #145977;
+        color: #fff;
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+    
+    .modal-footer {
+        padding: 6px 15px;
+    }
+    
+    .buttonsModal {
+        padding: 2px 6px;
+        font-size: 12px;
+    }
+    
+    .divTitleGrid {
+        width: 100%;
+        padding: 5px 10px 5px 10px;
+        background-color: #1C3441;
+        color: #fff;
+        font-weight: bold;
+        font-size: 13px;
+        text-align: center;
+    }
+    
+    .form-horizontal .control-label {
+        padding-top: 3px;
+        margin-bottom: 0;
+        text-align: right;
+    }
+    
+    input[type=checkbox],
+    input[type=radio] {
+        margin: 0px 0 0;
+    }
+    
+    .checkbox input[type=checkbox],
+    .checkbox-inline input[type=checkbox],
+    .radio input[type=radio],
+    .radio-inline input[type=radio] {
+        position: absolute;
+        margin-top: 4px\9;
+        margin-left: 0px;
+    }
+    
+    .content-option {
+        border: 1px solid #1C3441;
+        padding: 10px 40px 10px 10px;
+        width: auto;
+        right: 0px;
+        position: absolute;
+        margin-top: 0px;
+        font-size: 12px;
+        background-color: #f5f5f5;
+    }
+    
+    .d {
+        border: 0;
+        padding: 0px 0px;
+    }
+    
+    .contentGridSmall {
+        width: 269px;
+    }
+    
+    .contentGridMedium {
+        width: 569px;
+    }
+    
+    .contentGridLarge {
+        width: 869px;
+    }
+    
+    .rowFormat {
+        font-weight: bold;
+        color: #fff;
+    }
+    
+    .jqgridColBold {
+        font-weight: 900 !important;
+    }
+    
+    .ui-jqgrid-btable .success .jqgridColBold {
+        font-weight: 900 !important;
+    }

@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nombre: MyString
+  ape_paterno: MyString
+  ape_materno: MyString
+  genero_id: 1
+  cargo_id: 1
+  usuario_login: MyString
+  contrasena: MyString
+  correo: MyString
+  estado: MyString
+
+two:
+  nombre: MyString
+  ape_paterno: MyString
+  ape_materno: MyString
+  genero_id: 1
+  cargo_id: 1
+  usuario_login: MyString
+  contrasena: MyString
+  correo: MyString
+  estado: MyString

@@ -1,0 +1,160 @@
+<div class="row-fluid contentButtons">
+<button name="MenuBarButton" id="btnNew" onclick="menuButtonOnClick('_MB_NEW')" class="btn menuButtons">
+<%= image_tag "/assets/new.png", :alt => "" %> Nuevo</button>
+
+<button name="MenuBarButton" id="btnEdit" onclick="menuButtonOnClick('_MB_EDIT')" class="btn menuButtons">
+<%= image_tag "/assets/edit.png", :alt => "" %> Editar</button>
+
+<button name="MenuBarButton" id="btnDelete" onclick="menuButtonOnClick('_MB_DELETE')" class="btn menuButtons">
+<%= image_tag "/assets/delete.png", :alt => "" %> Eliminar</button>
+</div>
+<imput type="hidden" id="dato">
+
+<div id="contentGridBandeja">
+    <table id="grdBandeja"></table>
+    <div id="pagerBandeja"></div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+    	debugger;
+        $(".TitlePage").text('Gestión de Usuarios');
+        $(".TitleHeaderPage").text('Usuario');
+
+       $("#grdBandeja").jqGrid({
+			url: '/usuario/grid_data',
+			datatype: 'json',
+			colNames: ['','Nombre', 'Apellido Paterno', 'Apellido Materno','','Genero','','Cargo','Usuario','Correo',''],
+            colModel: [       
+                { name: 'usuarioId', hidden:true },     
+                { name: 'nombre', width: 90, sortable: false },
+                { name: 'apePaterno', width: 90, sortable: false },
+                { name: 'apeMaterno', width: 90, sortable: false },
+                { name: 'generoId', hidden:true },
+                { name: 'nombreGenero', width: 100, sortable: false },                
+                { name: 'cargoId', hidden:true },
+                { name: 'nombreCargo', width: 100, sortable: false },   
+                { name: 'login', width: 80, sortable: false },
+                { name: 'correo', width: 150, sortable: false },     
+                { name: 'estado', hidden:true },
+            ],
+            onSelectRow: function(rowid){
+                debugger;
+                if (rowid == null || rowid == 0)
+                    return;
+
+			    row = $("#grdBandeja").jqGrid('getRowData',rowid);
+                 if(row.estado == "I"){
+                    $('#btnDelete').attr("disabled", true);
+                }
+                else{
+                    $("#btnDelete").attr("disabled", false);
+                }
+
+                $("#dato").val(rowid);
+                $('#grdBandejaUsuario').setGridParam({ datatype: 'json' });
+                $('#grdBandejaUsuario').trigger('reloadGrid');
+            },
+            gridComplete: function(){
+                var rows = $("#grdBandeja").getDataIDs(); 
+                for (var i = 0; i < rows.length; i++)
+                {
+                    var status = $("#grdBandeja").getCell(rows[i],"estado");
+                    if(status == "I")
+                        $("#grdBandeja").jqGrid('setRowData',rows[i],false, {  color:'red'});
+                }
+            },
+            // styleUI : 'Bootstrap',
+            rowNum: 10,
+            rowList: [5, 10, 20],
+            pager: '#pagerBandeja',
+            gridview: true,
+            rownumbers: false,
+            autoencode: true,
+            ignoreCase: true,
+            //sortname: 'created_at',
+            viewrecords: true,
+            sortorder: 'desc',
+            autowidth: true,
+            height: 300
+		});
+        resizeWorkspace();
+
+        $(window).resize(function () {
+            var newWidth = $('#contentGridBandeja').width() - 3;
+            $('#grdBandeja').setGridWidth(newWidth);
+            var newWidth2 = $('#contentGrid').width() - 3;
+            $('#grdBandejaUsuario').setGridWidth(newWidth2);
+        });
+    })
+
+function menuButtonOnClick(key){
+    	switch (key) {
+            case '_MB_NEW':
+            debugger;
+            	var postData = {
+            		edit : "1"
+            	}
+            	controllerPostAction ('/usuario/mantenimiento', postData, 'workspace', true, true, null);
+                break;
+            case '_MB_EDIT':
+            	rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+            	if (rowId != null) {
+					row = $("#grdBandeja").jqGrid('getRowData',rowId);
+				}
+            	else {
+            		message(2,'Seleccione un registro')
+         			return;
+            	}
+            	var postData = {
+            		edit : "2",
+            		usuarioId : row.usuarioId
+            	}
+            	controllerPostAction ('/usuario/mantenimiento', postData, 'workspace', true, true, null);
+                break;
+            case '_MB_DELETE':
+                rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+                if (rowId != null) {
+                    row = $("#grdBandeja").jqGrid('getRowData',rowId);
+                }
+                else {
+                    message(2,'Seleccione un registro')
+                    return;
+                }
+
+                bootbox.confirm({ title: "( Eliminar Usuario )", message:
+                  '¿Esta seguro de eliminar el usuario seleccionado?', callback :function(result) {
+                      if (result==false){
+                          return;
+                      }
+                    var postData = {
+                        edit : "3",
+                        usuarioId : row.usuarioId
+                    }
+                    controllerSaveAction('/usuario/eliminarUsuario', postData, true, true, function (response){
+                        debugger;
+                       if (response.success) {
+                           debugger;
+                          $('#grdBandeja').setGridParam({ datatype: 'json' });
+                          $('#grdBandeja').trigger('reloadGrid');
+
+                          message(1, response.message);
+
+                       } else {
+                          message(2, response.message);
+                       }
+                    });
+                  }})
+            break;
+        }
+    }
+
+  function resizeWorkspace(){
+        debugger;
+            var newWidth = $('#contentGridBandeja').width() - 3;
+            $('#grdBandeja').setGridWidth(newWidth);
+            var newWidth2 = $('#contentGrid').width() - 3;
+            $('#grdBandejaUsuario').setGridWidth(newWidth2);
+    }
+</script>

@@ -1,0 +1,103 @@
+<div class="row-fluid contentButtons">
+<button name="MenuBarButton" id="btnEdit" onclick="menuButtonOnClick('_MB_EDIT')" class="btn menuButtons">
+<%= image_tag "/assets/edit.png", :alt => "" %> Editar</button>
+
+<!--<button name="MenuBarButton" id="btnDelete" onclick="menuButtonOnClick('_MB_DELETE')" class="btn menuButtons">
+<%= image_tag "/assets/delete.png", :alt => "" %> Eliminar</button>-->
+</div>
+
+
+<div id="contentGrid">
+    <table id="grdBandeja"></table>
+    <div id="pagerBandeja"></div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    	debugger;
+        $(".TitlePage").text('Gestión de Roles');
+        $(".TitleHeaderPage").text('Rol');
+        
+       $("#grdBandeja").jqGrid({
+			url: '/rol/grid_data',
+			datatype: 'json',
+			colNames: ['','Rol'],
+            colModel: [       
+                { name: 'rolId', hidden:true },     
+                { name: 'nombre', sortable: false }
+            ],
+            // styleUI : 'Bootstrap',
+            rowNum: 10,
+            rowList: [5, 10, 20],
+            pager: '#pagerBandeja',
+            gridview: true,
+            rownumbers: false,
+            autoencode: true,
+            ignoreCase: true,
+            //sortname: 'created_at',
+            viewrecords: true,
+            sortorder: 'desc',
+            autowidth: true,
+            height: 300
+		});
+
+
+        $(window).resize(function () {
+            var newWidth = $('#contentGrid').width() - 2;
+            $('#grdBandeja').setGridWidth(newWidth);
+        });
+    })
+  
+function menuButtonOnClick(key){
+    	switch (key) {
+            case '_MB_NEW':
+            	var postData = {
+            		edit : "1"
+            	}
+            	controllerPostAction ('/rol/mantenimiento', postData, 'workspace', true, true, null);
+                break;
+            case '_MB_EDIT':
+            	rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+            	if (rowId != null) {
+					row = $("#grdBandeja").jqGrid('getRowData',rowId);
+				}
+            	else {
+            		message(2,'Seleccione un registro')
+         			return;
+            	}
+            	var postData = {
+            		edit : "2",
+            		rolId : row.rolId
+            	}
+            	controllerPostAction ('/rol/mantenimiento', postData, 'workspace', true, true, null);
+                break;
+            case '_MB_DELETE':
+                rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+                if (rowId != null) {
+                    row = $("#grdBandeja").jqGrid('getRowData',rowId);
+                }
+                else {
+                    message(2,'Seleccione un registro')
+                    return;
+                }
+                var postData = {
+                    edit : "3",
+                    rolId : row.rolId
+                }
+                    controllerSaveAction('/rol/eliminarRol', postData, true, true, function (response){
+                        debugger;
+                       if (response.success) {
+                           debugger;
+                          $('#grdBandeja').setGridParam({ datatype: 'json' });
+                          $('#grdBandeja').trigger('reloadGrid');
+
+                          message(1, response.message);
+
+                       } else {
+                          message(2, response.message);
+                       }
+                    });
+            break;
+        }
+    }
+</script>

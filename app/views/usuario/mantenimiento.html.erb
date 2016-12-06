@@ -1,0 +1,250 @@
+<div class="row-fluid contentButtons">
+    <button name="MenuBarButton" id="btnSave" onclick="menuButtonOnClick('_MB_SAVE')" class="btn menuButtons">
+        <%= image_tag "/assets/save.png", :alt => "" %> Guardar
+    </button>
+    <button name="MenuBarButton" id="btnExit" onclick="menuButtonOnClick('_MB_EXIT')" class="btn menuButtons">
+        <%= image_tag "/assets/back.png", :alt => "" %> Salir
+    </button>
+</div>
+
+<% if @isNew == true %>
+    <input type="hidden" id="idUsuario" value= "">
+<% else %>
+    <input type="hidden" id="idUsuario" value= "<%="#{@user.id}"%>">
+<% end %>
+
+<input type="hidden" id="edit" value= "<%="#{@edit}"%>">
+<div class="panel">
+    <div class="panel-body">
+        <div class="form-horizontal col-lg-12">
+            <fieldset>
+                <legend>Informacion Personal</legend>
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Apellido Paterno</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                            <input type="text" id="apePat" value="" class="form-control" placeholder="Apellido Paterno">
+                        <% else %>
+                            <input type="text" id="apePat" value= "<%="#{@user.ape_paterno.strip}"%>" class="form-control" placeholder="Apellido Paterno" >
+                        <% end %>
+                    </div>
+                    <div class="col-lg-2 control-label">Apellido Materno</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                            <input type="text" id="apeMat" value="" class="form-control" placeholder="Apellido Materno">
+                        <% else %>
+                            <input type="text" id="apeMat" value= "<%="#{@user.ape_materno.strip}"%>" class="form-control" placeholder="Apellido Materno" >
+                        <% end %>
+                    </div>
+                    <div class="col-lg-2 control-label">Nombres</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                            <input type="text" id="nombre" value="" class="form-control" placeholder="Nombres">
+                        <% else %>
+                            <input type="text" id="nombre" value= "<%="#{@user.nombre.strip}"%>" class="form-control" placeholder="Nombres" >
+                        <% end %>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Genero</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                        <select class="form-control" id="ddlGenero">
+                            <option value="">Seleccione</option>
+                            <% @genero.each do |genero| %>
+                                <option value="<%= genero.id %>"><%= genero.nombre.strip %></option>
+                            <% end %>
+                        </select>
+                        <% else %>
+                        <select class="form-control" id="ddlGenero">
+                            <option value=''>Seleccione</option>
+                            <% @genero.each do |genero| %>
+                                <% if (genero.id == @user.genero_id) %>
+                                    <option value="<%="#{genero.id}"%>" selected><%= "#{genero.nombre.strip}"%></option>
+                                <% else %>
+                                    <option value="<%="#{genero.id}"%>"><%= "#{genero.nombre.strip}"%></option>
+                                <% end %>
+                            <% end %>
+                        </select>
+                        <% end %>
+                    </div>
+                    <div class="col-lg-2 control-label">Cargo</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                            <select class="form-control" id="ddlCargo">
+                                <option value="">Seleccione</option>
+                                <% @cargo.each do |cargo| %>
+                                    <option value="<%= cargo.id %>"><%= cargo.nombre.strip %></option>
+                                <% end %>
+                            </select>
+                        <% else %>
+                            <select class="form-control" id="ddlCargo">
+                                <option value=''>Seleccione</option>
+                                <% @cargo.each do |cargo| %>
+                                    <% if (cargo.id == @user.cargo_id) %>
+                                        <option value="<%="#{cargo.id}"%>" selected><%= "#{cargo.nombre.strip}"%></option>
+                                    <% else %>
+                                        <option value="<%="#{cargo.id}"%>"><%= "#{cargo.nombre.strip}"%></option>
+                                    <% end %>
+                                <% end %>
+                            </select>
+                        <% end %>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Informacion del Usuario</legend>
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Correo</div>
+                    <div class="col-lg-6">
+                        <% if @isNew == true %>
+                        <input type="text" id="correo" value="" class="form-control" placeholder="Correo Electronico">
+                        <% else %>
+                        <input type="text" id="correo" value= "<%="#{@user.correo.strip}"%>" class="form-control" placeholder="Correo Electronico" >
+                        <% end %>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-2 control-label">Usuario</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                        <input type="text" id="usuario" value="" class="form-control" placeholder="Usuario">
+                        <% else %>
+                        <input type="text" id="usuario" value= "<%="#{@user.usuario_login.strip}"%>" class="form-control" placeholder="Usuario" >
+                        <% end %>
+                    </div>
+                    <div class="col-lg-2 control-label">Contraseña</div>
+                    <div class="col-lg-2">
+                        <% if @isNew == true %>
+                        <input type="password" id="contrasena" value="" class="form-control" placeholder="Contraseña" maxlength="10">
+                        <% else %>
+                        <input type="password" id="contrasena" value= "<%="#{@user.contrasena.strip}"%>" class="form-control" placeholder="Contraseña" maxlength="10">
+                        <% end %>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="form-group">    
+                <div class="col-lg-2 control-label">Activo</div>        
+                <div class="col-lg-2 checkbox">
+                <% if "#{@user.estado}" == 'A' %>
+                    <input type="checkbox" id="estado" checked>
+                <% else %>
+                    <input type="checkbox" id="estado">
+                <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        <% if @isNew == true %>
+            $(".TitlePage").text('Registro de Usuarios - (Nuevo)');
+        <% else %>
+           $(".TitlePage").text('Registro de Usuarios - (Editar)');
+        <% end %>
+        })
+
+    function menuButtonOnClick(key){
+        debugger;
+        switch (key) {
+            case '_MB_SAVE':
+                debugger;
+                saveData();
+                break;
+            case '_MB_EXIT':
+                debugger;
+                $("#ajaxLoadingPanel").show();
+                var url = "/usuario/bandeja"
+                $.get(url).done(function (result) {
+                    setTimeout(function () {
+                        $("#ajaxLoadingPanel").hide();
+                    }, 200);
+                    $("#workspace").html(result);
+                });
+                break;
+        }
+    }
+    function saveData(){
+        if ($("#apePat").val() == '') {
+            $("#apePat").focus()
+            message(2,'Ingrese el apellido paterno')
+            return;
+        }
+        if ($("#apeMat").val() == '') {
+            $("#apeMat").focus()
+            message(2,'Ingrese el apellido materno')
+            return;
+        }
+        if ($("#nombre").val() == '') {
+            $("#nombre").focus()
+            message(2,'Ingrese el nombre')
+            return;
+        }
+        if ($("#ddlGenero").val() == '') {
+            $("#ddlGenero").focus()
+            message(2,'Seleccine el genero')
+            return;
+        }
+        if ($("#ddlCargo").val() == '') {
+            $("#ddlCargo").focus()
+            message(2,'Seleccine el cargo')
+            return;
+        }
+        if ($("#correo").val() == '') {
+            $("#correo").focus()
+            message(2,'Ingrese el correo Electronico')
+            return;
+        }
+        if ($("#usuario").val() == '') {
+            $("#usuario").focus()
+            message(2,'Ingrese el usuario')
+            return;
+        }
+        if ($("#contrasena").val() == '') {
+            $("#contrasena").focus()
+            message(2,'Ingrese la Contraseña')
+            return;
+        }
+        debugger;
+        if( $('#estado').prop('checked') )
+            var estado = 'A'
+        else   
+            var estado = 'I'
+
+        var jsonData = {
+            usuarioId: $("#idUsuario").val(),
+            nombre: $("#nombre").val(),
+            apePat: $("#apePat").val(),
+            apeMat: $("#apeMat").val(),
+            generoId: $("#ddlGenero").val(),
+            cargoId: $("#ddlCargo").val(),
+            correo: $("#correo").val(),
+            usuario: $("#usuario").val(),
+            contrasena: $("#contrasena").val(),
+            estado: estado,
+            edit: $("#edit").val()
+        }
+        controllerSaveAction("/usuario/grabarDatos", jsonData, true, true, function (response) {
+            debugger;
+            if (response.success) {
+                // location.href = response.url;
+                controllerGetAction(response.url, null, 'workspace', true, true, null);
+                message(1, response.message);
+            }
+            else {
+                message(2, response.message);
+            }
+        });
+
+        // 	$("#ajaxLoadingPanel").show();
+        //         	$.ajax({
+        //     type: "POST",
+        //     url: "/usuario/grabarDatos",
+        //     success: function(data,status,xhr){
+        //                   setTimeout(function () { $("#ajaxLoadingPanel").hide(); }, 1000);
+        // 	}
+        // })
+    }
+</script>

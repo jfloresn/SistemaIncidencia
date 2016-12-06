@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  incidencia_id: 1
+  estado_incidencia: 1
+  estado_apro_inci_id: 1
+  fecha: 2016-11-12 13:21:24
+  observacion: MyString
+
+two:
+  incidencia_id: 1
+  estado_incidencia: 1
+  estado_apro_inci_id: 1
+  fecha: 2016-11-12 13:21:24
+  observacion: MyString

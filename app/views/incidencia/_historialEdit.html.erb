@@ -1,0 +1,60 @@
+<div class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" id="divHistorialEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title" id="exampleModalLabel">Historial de Incidencias</h5>
+            </div>
+            <div class="modal-body">
+                <div id="contentBandejaHistoria" class="contentGridMedium">
+                    <table id="grdBandejaHistoria"></table>
+                    <div id="pagerBandejaHistoria"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn buttonsModal btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn buttonsModal btn-primary" onclick="onClickOkHistorial()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+       $("#grdBandejaHistoria").jqGrid({
+			url: '/incidencia/grid_data_historia',
+             postData: {
+                incidenciaId: function () { return $("#idIncidencia").val() }
+            },
+			datatype: 'json',
+			colNames: ['','', 'Fecha', 'Estado Incidencia','Estado Aprobacion','Observacion'],
+            colModel: [       
+                { name: 'historialIncidenciaId', hidden:true},
+                { name: 'incidenciaId', hidden:true },     
+                { name: 'fecha', width: 60, sortable: false, align:'right' },
+                { name: 'estadoIncidencia', width: 80, sortable: false },
+                { name: 'estadoAprobIncidencia', width: 80, sortable: false },
+                { name: 'observacion', width: 150, sortable: false }            
+            ],
+            // styleUI : 'Bootstrap',
+            rowNum: 10,
+            rowList: [5, 10, 20],
+            pager: '#pagerBandejaHistoria',
+            gridview: true,
+            rownumbers: false,
+            autoencode: true,
+            ignoreCase: true,
+            //sortname: 'created_at',
+            viewrecords: true,
+            sortorder: 'desc',
+            autowidth: true,
+            height: 200,
+            width:568
+		});
+        // resizeWorkspace();
+    })
+    function resizeWorkspace(){
+        debugger;
+        var newWidth = $('#contentBandejaHistoria').width() - 3;
+        $('#grdBandejaHistoria').setGridWidth(newWidth);
+    }
+</script>

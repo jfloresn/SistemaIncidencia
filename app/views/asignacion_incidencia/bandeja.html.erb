@@ -1,0 +1,186 @@
+<div class="row-fluid contentButtons">
+<button name="MenuBarButton" id="btnEdit" onclick="menuButtonOnClick('_MB_EDIT')" class="btn menuButtons">
+<%= image_tag "/assets/edit.png", :alt => "" %> Ver Incidencia</button>
+<button name="MenuBarButton" id="btnCheck" onclick="menuButtonOnClick('_MB_CHECK')" class="btn menuButtons">
+<%= image_tag "/assets/check.png", :alt => "" %> Asignar Tecnico</button>
+<button name="MenuBarButton" id="btnViewHistory" onclick="menuButtonOnClick('_MB_VIEW_HISTORY')" class="btn menuButtons">
+<%= image_tag "/assets/history.png", :alt => "" %> Ver Historial</button>
+</div>
+
+<input type="hidden" id="idIncidencia" value= "">
+
+<div id="contentGrid">
+    <table id="grdBandeja"></table>
+    <div id="pagerBandeja"></div>
+</div>
+
+<!-- Div Historial Edit -->
+ <%= render(:partial => "historialEdit") %>
+<script type="text/javascript">
+    $(document).ready(function () {
+        resizeWorkspace();
+    	debugger;
+        $(".TitlePage").text('Asignacion de Incidencias');
+        $(".TitleHeaderPage").text('Tickets');
+
+       $("#grdBandeja").jqGrid({
+			url: '/asignacion_incidencia/grid_data',
+			datatype: 'json',
+			colNames: ['','Codigo','', 'Solicitante', 'Tecnico','Fecha','Asunto','','Estado Incidencia','','Estado Aprobacion'],
+            colModel: [       
+                { name: 'incidenciaId', hidden:true },  
+                { name: 'codigo', width: 60, sortable: false, classes : 'jqgridColBold' },
+                { name: 'tecnicoId', hidden:true },     
+                { name: 'usuario', width: 110, sortable: false },
+                { name: 'tecnico', width: 110, sortable: false },
+                { name: 'fecha', width: 40, sortable: false, align:'right' },
+                { name: 'asunto', width: 150, sortable: false },                
+                { name: 'codigoEstadoIncidencia', hidden:true },
+                { name: 'estadoIncidencia', width: 80, align:'center', sortable: false,formatter:EstadoIncidenciaFormatter },            
+                { name: 'codigoEstadoAproIncidencia', hidden:true }, 
+                { name: 'estadoAprobIncidencia', width: 80, align:'center', sortable: false,formatter:EstadoAprobacionIncidenciaFormatter }
+            ],
+            onSelectRow: function (rowid) {
+                if (rowid == null || rowid == 0)
+                    return;
+                debugger;
+			    row = $("#grdBandeja").jqGrid('getRowData',rowid);
+
+                if (row.codigoEstadoIncidencia != "02") {
+                    $('#btnCheck').attr("disabled", true);
+                    $('#btnEdit').attr("disabled", true);
+                }
+                else{
+                    $("#btnCheck").attr("disabled", false);
+                    $("#btnEdit").attr("disabled", false);
+                }
+
+                $("#idIncidencia").val(row.incidenciaId);
+                $('#grdBandejaHistoria').setGridParam({ datatype: 'json' });
+                $('#grdBandejaHistoria').trigger('reloadGrid');
+            },
+            gridComplete: function(){
+                var rows = $("#grdBandeja").getDataIDs(); 
+                for (var i = 0; i < rows.length; i++)
+                {
+                    var status = $("#grdBandeja").getCell(rows[i],"codigoEstadoIncidencia");
+                    if(status == "05")
+                        $("#grdBandeja").jqGrid('setRowData',rows[i],false, {  color:'red'});
+                }
+            },
+            // styleUI : 'Bootstrap',
+            rowNum: 10,
+            rowList: [5, 10, 20],
+            pager: '#pagerBandeja',
+            gridview: true,
+            rownumbers: false,
+            autoencode: true,
+            ignoreCase: true,
+            //sortname: 'created_at',
+            viewrecords: true,
+            sortorder: 'desc',
+            autowidth: true,
+            height: 300
+		});
+               
+        $(window).resize(function () {
+            var newWidth = $('#contentGrid').width() - 2;
+            var newWidth2 = $('#contentGridHistoria').width() - 2;
+            $('#grdBandeja').setGridWidth(newWidth);
+            $('#grdBandejaHistoria').setGridWidth(newWidth2);
+        });
+    })
+  
+function menuButtonOnClick(key){
+    	switch (key) {
+            case '_MB_EDIT':
+            	rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+            	if (rowId != null) {
+					row = $("#grdBandeja").jqGrid('getRowData',rowId);
+				}
+            	else {
+            		message(2,'Seleccione un registro')
+         			return;
+            	}
+            	var postData = {
+            		edit : "2",
+            		usuarioId : row.usuarioId,
+            		incidenciaId : row.incidenciaId
+            	}
+            	controllerPostAction ('/asignacion_incidencia/mantenimiento', postData, 'workspace', true, true, null);
+                break;
+            case '_MB_CHECK':
+                rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+                if (rowId != null) {
+                    row = $("#grdBandeja").jqGrid('getRowData',rowId);
+                }
+                else {
+                    message(2,'Seleccione un registro')
+                    return;
+                }
+
+                modal("divAsignarUsuario", "divContentAsignarUsuario", "Listado de Tecnicos", "onClickOkAsignar()", true, 2);
+                
+                controllerPostAction('/asignacion_incidencia/usuarioEdit', null, "divContentAsignarUsuario", false, false, null);
+                $("#divAsignarUsuario").modal('show');
+                resizeWorkspace();
+            break;
+            case '_MB_VIEW_HISTORY':
+                rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+                if (rowId != null) {
+                    row = $("#grdBandeja").jqGrid('getRowData',rowId);
+                }
+                else {
+                    message(2,'Seleccione un registro')
+                    return;
+                }
+                
+                $('#divHistorialEdit').modal('show');
+                resizeWorkspace();
+            break;
+        }
+    }
+    function onClickOkHistorial(){
+        debugger;
+        $("#divHistorialEdit").modal('hide');
+    }
+    function onClickOkAsignar(){
+        debugger;
+        
+        rowId = $("#grdBandeja").jqGrid ('getGridParam', 'selrow')
+        row = $("#grdBandeja").jqGrid('getRowData',rowId);
+
+        var nombreTecnico = $("#ddlTecnicoId option:selected").text();
+        var tecnicoId = $("#ddlTecnicoId").val();
+        $('#grdBandeja').jqGrid('setCell', rowId, 'tecnico', nombreTecnico);
+        $('#grdBandeja').jqGrid('setCell', rowId, 'tecnicoId', tecnicoId);
+
+        var jsonData = {
+            tecnicoId: tecnicoId,
+            incidenciaId : row.incidenciaId
+        }
+        controllerSaveAction("/asignacion_incidencia/grabarTecnico", jsonData, true, true, function (response) {
+            debugger;
+            if (response.success) {
+                message(1, response.message);
+                $('#grdBandeja').setGridParam({ datatype: 'json' });
+                $('#grdBandeja').trigger('reloadGrid');
+        
+                // $("#divHistorial").modal('hide');
+                $('#divAsignarUsuario').remove();
+                $('.modal-backdrop').remove();
+            }
+            else {
+                message(2, response.message);
+            }
+        });
+    }
+    
+    function resizeWorkspace(){
+        debugger;
+        var newWidth = $('#contentGrid').width() - 3;
+        $('#grdBandejaUsuario').setGridWidth(newWidth);
+        var newWidth2 = $('#contentBandejaHistoria').width() - 3;
+        $('#grdBandejaHistoria').setGridWidth(newWidth2);
+    }
+</script>
